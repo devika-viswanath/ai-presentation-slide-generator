@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <h1>AI PPT Generator</h1>
-      <button>subscribe</button>
+      <Button>subscribe</Button>
     </div>
   )
 }
