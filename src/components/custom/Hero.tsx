@@ -2,18 +2,31 @@ import { Play, Video } from 'lucide-react'
 import React from 'react'
 import { Button } from '../ui/button'
 import { HeroVideoDialog } from '@/components/ui/hero-video-dialog'
+import { useUser,SignInButton } from '@clerk/clerk-react'
+import { Link } from 'react-router-dom'
+
 
 
 
 
 function Hero() {
+
+  const { user }=useUser();
+
+
   return (
     <div className='flex flex-col items-center justify-center mt-28 space-y-4'>
       <h2 className='font-bold text-5xl'>From Idea to <span className='text-primary'>Presentation</span> in one Click ⚡</h2>
       <p className='text-xl text-gray-500 max-w-2xl text-center'>Generate sleek, editable PPT decks in minutes. AI handle slide design, formatting and visual content so you can focus on your message, impress your audience, and work smarter, not harder.</p>
       <div className='flex gap-5 mt-10'>
         <Button variant={'outline'} size={'lg'}> Watch Video <Play /> </Button>
-        <Button size={'lg'}>Get Started</Button>
+         {!user?
+          <SignInButton mode='modal'>
+            <Button size={'lg'}>Get Started</Button>
+          </SignInButton>
+          :<Link to="/workspace"> 
+            <Button size={'lg'}>Go to Workspace</Button>
+          </Link>}
       </div>
        <div className="relative max-w-3xl mt-14">
         <h2 className='text-center my-4'>Watch how to Create AI PPT</h2>
