@@ -1,27 +1,43 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import logo from '../../assets/logo.png'
 import { Button } from '../ui/button'
-import { SignInButton,UserButton,useUser } from '@clerk/clerk-react';
-import { Link } from 'react-router-dom';
+import { SignInButton, UserButton, useUser } from '@clerk/clerk-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Diamond, Gem } from 'lucide-react';
+import { UserDetailContext } from './../../../context/UserDetailContext';
+
 function Header() {
-  const {user} = useUser();
+  const { user } = useUser();
+  const location = useLocation();
+  const { userDetails } = useContext(UserDetailContext); // Changed from userDetail to userDetails
+
   return (
     <div className='flex items-center justify-between px-10 shadow'>
       <img src={logo} alt="Logo" width={130} height={130} />
-      {!user?
-      <SignInButton mode='modal'>
-        <Button>Get Started</Button>
-      </SignInButton>
-      : <div className='flex gap-5 items-center'>
-          <UserButton/>
-          <Link to="/workspace"> 
-            <Button>Go to Workspace</Button> 
-          </Link>
-          
-        </div>}
-      
+
+      {!user ? (
+        <SignInButton mode='modal'>
+          <Button>Get Started</Button>
+        </SignInButton>
+      ) : (
+        <div className='flex gap-5 items-center'>
+          <UserButton />
+
+          {location.pathname.includes('workspace') && (
+            <div className='flex gap-2 items-center p-2 px-3 bg-orange-100 rounded-full'>
+              < Gem /> {userDetails?.credits ?? 0} {/* Changed from userDetail to userDetails */}
+            </div>
+          )}
+
+          {!location.pathname.includes('workspace') && (
+            <Link to="/workspace">
+              <Button>Go to Workspace</Button>
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   )
 }
 
-export default Header
+export default Header;

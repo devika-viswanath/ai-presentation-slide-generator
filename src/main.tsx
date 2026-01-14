@@ -5,7 +5,9 @@ import App from './App.tsx'
 import { createBrowserRouter, Router, RouterProvider } from 'react-router-dom'
 import Workspace from './workspace/index.tsx'
 import Project from './workspace/project/index.tsx'
- import { ClerkProvider } from '@clerk/clerk-react'
+import { ClerkProvider } from '@clerk/clerk-react'
+import { UserDetailContext } from './../context/UserDetailContext.tsx'
+import { useState } from 'react'
 
 
 const router = createBrowserRouter([
@@ -28,12 +30,20 @@ if (!PUBLISHABLE_KEY) {
   throw new Error('Missing Publishable Key')
 }
 
+function Root() {
+  const [ userDetails, setUserDetails ] = useState();
+  return (
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <UserDetailContext.Provider value={{ userDetails, setUserDetails}}>
+     <RouterProvider router={router} />
+     </UserDetailContext.Provider>
+     </ClerkProvider>
+  )
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-     
-    <RouterProvider router={router} />
-     </ClerkProvider>
+    <Root />
    
   </StrictMode>,
 )
