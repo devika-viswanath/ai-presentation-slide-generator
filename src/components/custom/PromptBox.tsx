@@ -22,11 +22,15 @@ import { v4 as uuidv4 } from 'uuid'
 import { doc, setDoc } from 'firebase/firestore'
 import { firebaseDb } from './../../../config/FirebaseConfig'
 import { useUser } from '@clerk/clerk-react'   
+import { useNavigate } from 'react-router-dom'
+
 
 function PromptBox() {
   const [userInput, setUserInput] = useState<string>('');
+  const [noOfSlider,setNoOfSlider] = useState<string>('4 to 6');
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const CreateAndSaveProject = async () => {
     if (!userInput) return;
@@ -39,10 +43,14 @@ function PromptBox() {
         projectId,
         userInputPrompt: userInput,
         createdBy: user?.primaryEmailAddress?.emailAddress,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        noOfSlides: noOfSlider
+        
+
       });
     } finally {
       setLoading(false);
+      navigate('/workspace/project/' + projectId + '/outline');
     }
   }
 
@@ -65,7 +73,7 @@ function PromptBox() {
 
           <InputGroupAddon align={'block-end'}>
 
-            <Select>
+            <Select onValueChange={(value) => setNoOfSlider(value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select No of Slides" />
               </SelectTrigger>

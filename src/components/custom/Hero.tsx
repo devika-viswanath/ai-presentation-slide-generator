@@ -31,19 +31,21 @@ function Hero() {
        <div className="relative max-w-3xl mt-14">
         <h2 className='text-center my-4'>Watch how to Create AI PPT</h2>
       <HeroVideoDialog
-        className="block dark:hidden"
-        animationStyle="from-center"
-        videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-        thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-        thumbnailAlt="Hero Video"
-      />
-      <HeroVideoDialog
-        className="hidden dark:block"
-        animationStyle="from-center"
-        videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-        thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
-        thumbnailAlt="Hero Video"
-      />
+  className="block dark:hidden"
+  animationStyle="from-center"
+  videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+  thumbnailSrc="https://img.youtube.com/vi/qh3NGpYRG3I/maxresdefault.jpg"
+  thumbnailAlt="Hero Video"
+/>
+
+<HeroVideoDialog
+  className="hidden dark:block"
+  animationStyle="from-center"
+  videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+  thumbnailSrc="https://img.youtube.com/vi/qh3NGpYRG3I/maxresdefault.jpg"
+  thumbnailAlt="Hero Video"
+/>
+
     </div>
     </div>
   )
