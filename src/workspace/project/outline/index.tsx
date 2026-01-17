@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { doc, getDoc } from 'firebase/firestore';
-import { firebaseDb, GeminiAiModel } from './../../../../config/FirebaseConfig';
-import { Slice, Sliders } from 'lucide-react';
-import { Slider } from '@radix-ui/react-slider';
-import SlidersStyle from '@/components/custom/SlidersStyle';
-import OutlineSection from '@/components/custom/OutlineSection';
-import { set } from 'date-fns';
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { firebaseDb, GeminiAiModel } from './../../../../config/FirebaseConfig'
+import { ArrowRight, Loader2Icon } from 'lucide-react'
+import SlidersStyle, { type DesignStyle } from '@/components/custom/SlidersStyle'
+import OutlineSection from '@/components/custom/OutlineSection'
+import { Button } from '@/components/ui/button'
 
-const OUTLINE_PROMPT=`Generate a PowerPoint slide outline for the topic {userInput}.  
-Create {noOfSliders} slides in total. Each slide should include a topic name and a 2-line descriptive outline that clearly explains what content the slide will cover.
+const OUTLINE_PROMPT = `Generate a PowerPoint slide outline for the topic {userInput}.  
+Create {noOfSliders} slides in total.
 
-Include the following structure:
-The first slide should be a Welcome screen.
-The second slide should be an Agenda screen.
-The final slide should be a Thank You screen.
-
-Return the response only in JSON format, following this schema:
+Return the response only in JSON format:
 [
   {
     "slideNo": "",
@@ -25,121 +19,112 @@ Return the response only in JSON format, following this schema:
   }
 ]`
 
-const DUMMY_OUTLINE=[
-{
-    "slideNo": "1",
-    "slidePoint": "Welcome & Introduction",
-    "outline": "A warm welcome to all attendees and brief introduction to the presentation.\nSetting expectations and overview of what will be covered in today's session."
-  },
-  {
-    "slideNo": "2",
-    "slidePoint": "Today's Agenda",
-    "outline": "A clear roadmap outlining the key topics and sections we'll explore.\nTimeline and structure to help you follow along throughout the presentation."
-  },
-  {
-    "slideNo": "3",
-    "slidePoint": "Problem Statement & Context",
-    "outline": "Identifying the core challenge or opportunity we're addressing.\nProviding background information and context to frame our discussion."
-  },
-  {
-    "slideNo": "4",
-    "slidePoint": "Current State Analysis",
-    "outline": "Examining the present situation with relevant data and insights.\nHighlighting key trends, metrics, and factors influencing our topic."
-  },
-  {
-    "slideNo": "5",
-    "slidePoint": "Proposed Solution & Benefits",
-    "outline": "Presenting our recommended approach or solution to the identified challenge.\nOutlining the key benefits and advantages of this proposed direction."
-  },
-  {
-    "slideNo": "6",
-    "slidePoint": "Implementation Strategy",
-    "outline": "Detailed plan for executing the proposed solution effectively.\nTimeline, resources needed, and key milestones for successful implementation."
-  },
-  {
-    "slideNo": "7",
-    "slidePoint": "Expected Outcomes & Next Steps",
-    "outline": "Anticipated results and impact of implementing our recommendations.\nClear action items and immediate next steps to move forward."
-  },
-  {
-    "slideNo": "8",
-    "slidePoint": "Thank You & Questions",
-    "outline": "Appreciation for your time and attention during this presentation.\nOpen floor for questions, discussion, and feedback from the audience."
-  }
+const DUMMY_OUTLINE = [
+  { slideNo: '1', slidePoint: 'Welcome', outline: 'Welcome slide' },
+  { slideNo: '2', slidePoint: 'Agenda', outline: 'Agenda slide' },
+  { slideNo: '3', slidePoint: 'Thank You', outline: 'Thank you slide' }
 ]
 
-type Project = {
-  userInputPrompt: string;
-  projectId: string;
-  createdAt: string;
-  noOfSliders: string;
-  outline: Outline[];
+export type Outline = {
+  slideNo: string
+  slidePoint: string
+  outline: string
 }
 
-export type Outline={
-  slideNo: string;
-  slidePoint: string;
-  outline: string;
+type Project = {
+  userInputPrompt: string
+  noOfSliders: string
+  outline?: Outline[]
+  designStyle?: any
 }
 
 function Outline() {
-  const { projectId } = useParams();
-  const [projectDetail, setProjectDetail] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [outline, setOutline] = useState<Outline[]>(DUMMY_OUTLINE);
+  const { projectId } = useParams()
+
+  const [projectDetail, setProjectDetail] = useState<Project | null>(null)
+  const [outline, setOutline] = useState<Outline[]>(DUMMY_OUTLINE)
+  const [loading, setLoading] = useState(false)
+  const [UpdateDbLoading, setUpdateDbLoading] = useState(false)
+  const [selectedStyle, setSelectedStyle] = useState<DesignStyle | undefined>()
+
   useEffect(() => {
-    projectId && GetProjectDetail();
-  }, [projectId]);
-  
+    if (projectId) GetProjectDetail()
+  }, [projectId])
+
   const GetProjectDetail = async () => {
-    const docRef = doc(firebaseDb, 'projects', projectId ?? '');
-    const docSnap = await getDoc(docRef);
-    
-    if (!docSnap.exists()) {
-      return;
-    }
-    
-    console.log(docSnap.data());
-    setProjectDetail(docSnap.data());
-    if(!docSnap.data()?.outline)
-    { 
-      // GenerateSlidersOutline(docSnap.data());
-    }
-    
-  }
-  const GenerateSlidersOutline= async(projectData:Project) =>{
-    setLoading(true);
-    // Provide a prompt that contains text
-  const prompt = OUTLINE_PROMPT.replace('{userInput}', projectData?.userInputPrompt).replace('{noOfSliders}', projectData?.noOfSliders);
+    const docRef = doc(firebaseDb, 'projects', projectId!)
+    const docSnap = await getDoc(docRef)
 
-  // To generate text output, call generateContent with the text input
-  const result = await GeminiAiModel.generateContent(prompt);
+    if (!docSnap.exists()) return
 
-  const response = result.response;
-  const text = response.text();
-  console.log(text);
-  const rawJson =text.replace('```json', '').replace('```', '');
-  const JSONData=JSON.parse(rawJson);
-  setOutline(JSONData);
-  setLoading(false);
+    const data = docSnap.data() as Project
+    setProjectDetail(data)
+
+    if (data.outline) setOutline(data.outline)
+    if (data.designStyle) setSelectedStyle(data.designStyle)
   }
+
   const handleUpdateOutline = (index: string, value: Outline) => {
-  setOutline(prev =>
-    prev.map(item =>
-      String(item.slideNo) === String(index) ? { ...item, ...value } : item
+    setOutline(prev =>
+      prev.map(item =>
+        item.slideNo === index ? { ...item, ...value } : item
+      )
     )
-  );
-};
+  }
 
-  
+  const onGenerateSlider = async () => {
+    if (!selectedStyle) {
+      alert('Please select a slider style')
+      return
+    }
+
+    setUpdateDbLoading(true)
+
+    try {
+      // 🔥 remove image import before saving
+      const { bannerImage, ...styleWithoutImage } = selectedStyle as any
+
+      await updateDoc(doc(firebaseDb, 'projects', projectId!), {
+        designStyle: styleWithoutImage,
+        outline: outline,
+        updatedAt: Date.now()
+      })
+    } catch (error) {
+      console.error('Firestore error:', error)
+    } finally {
+      setUpdateDbLoading(false)
+    }
+  }
+
   return (
-    <div className='flex justify-center mt-20'>
-      <div className='max-w-5xl w-full'>
-        <h2 className='font-bold text-2xl'>Settings and Slider Outline</h2>
-        <SlidersStyle />
-        <OutlineSection loading={loading} outline={outline || []} 
-        handleUpdateOutline={(index:string,value:Outline)=>handleUpdateOutline(index,value)}/>
+    <div className="flex justify-center mt-20">
+      <div className="max-w-5xl w-full">
+        <h2 className="font-bold text-2xl">Settings and Slider Outline</h2>
+
+        {/* ✅ PASS selectedStyle */}
+        <SlidersStyle
+          selectStyle={(value: DesignStyle) => setSelectedStyle(value)}
+          selectedStyle={selectedStyle}
+        />
+
+        <OutlineSection
+          loading={loading}
+          outline={outline}
+          handleUpdateOutline={(index, value) =>
+            handleUpdateOutline(index, value)
+          }
+        />
       </div>
+
+      <Button
+        size="lg"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2"
+        onClick={onGenerateSlider}
+        disabled={UpdateDbLoading || loading}
+      >
+        {UpdateDbLoading && <Loader2Icon className="animate-spin mr-2" />}
+        Generate Sliders <ArrowRight />
+      </Button>
     </div>
   )
 }

@@ -39,9 +39,7 @@ function OutlineSection({loading,outline,handleUpdateOutline }: Props) {
               </div>
             ))}
         </div>
-        <Button size={'lg'} className='fixed bottom-6 transform left-1/2 -transform-x-1/2' >
-            Generate Sliders <ArrowRight />
-        </Button>
+       
       
     </div>
   )
