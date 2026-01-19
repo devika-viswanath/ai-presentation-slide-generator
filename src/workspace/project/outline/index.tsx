@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { firebaseDb, GeminiAiModel } from './../../../../config/FirebaseConfig'
 import { ArrowRight, Loader2Icon } from 'lucide-react'
@@ -19,11 +19,56 @@ Return the response only in JSON format:
   }
 ]`
 
-const DUMMY_OUTLINE = [
-  { slideNo: '1', slidePoint: 'Welcome', outline: 'Welcome slide' },
-  { slideNo: '2', slidePoint: 'Agenda', outline: 'Agenda slide' },
-  { slideNo: '3', slidePoint: 'Thank You', outline: 'Thank you slide' }
-]
+/* ================= GENERATE DETAILED OUTLINE (8 SLIDES) ================= */
+
+const generateDetailedOutline = (topic: string): Outline[] => {
+  return [
+    { 
+      slideNo: '1', 
+      slidePoint: `Welcome to ${topic}`, 
+      outline: `Introduction and overview of ${topic}. Setting the stage for what will be covered in this presentation.` 
+    },
+    { 
+      slideNo: '2', 
+      slidePoint: 'Agenda & Objectives', 
+      outline: `Presentation roadmap and key learning goals. What you'll gain by the end of this session.` 
+    },
+    { 
+      slideNo: '3', 
+      slidePoint: `Understanding ${topic}`, 
+      outline: `Core concepts, definitions, and fundamental principles. Breaking down the key components and terminology.` 
+    },
+    { 
+      slideNo: '4', 
+      slidePoint: 'Current Challenges & Analysis', 
+      outline: `Identifying existing problems and pain points. Analysis of the current state and areas requiring attention.` 
+    },
+    { 
+      slideNo: '5', 
+      slidePoint: `${topic} - Solution & Strategy`, 
+      outline: `Proposed approach and methodology to address challenges. Step-by-step action plan with clear milestones.` 
+    },
+    { 
+      slideNo: '6', 
+      slidePoint: 'Implementation & Roadmap', 
+      outline: `Execution timeline, resources, and required tools. Practical steps for successful implementation and delivery.` 
+    },
+    { 
+      slideNo: '7', 
+      slidePoint: 'Expected Results & Benefits', 
+      outline: `Anticipated outcomes, success metrics, and ROI. How this solution delivers value and addresses key objectives.` 
+    },
+    { 
+      slideNo: '8', 
+      slidePoint: 'Summary & Q&A', 
+      outline: `Key takeaways and main conclusions. Open floor for questions, discussion, and next steps.` 
+    }
+  ]
+}
+
+/* ================= DEFAULT DUMMY OUTLINE ================= */
+
+const DUMMY_OUTLINE = generateDetailedOutline('Your Topic')
 
 export type Outline = {
   slideNo: string
@@ -40,6 +85,7 @@ type Project = {
 
 function Outline() {
   const { projectId } = useParams()
+  const navigate = useNavigate()
 
   const [projectDetail, setProjectDetail] = useState<Project | null>(null)
   const [outline, setOutline] = useState<Outline[]>(DUMMY_OUTLINE)
@@ -60,7 +106,14 @@ function Outline() {
     const data = docSnap.data() as Project
     setProjectDetail(data)
 
-    if (data.outline) setOutline(data.outline)
+    if (data.outline) {
+      setOutline(data.outline)
+    } else {
+      // Generate detailed outline based on user input if no outline exists
+      const detailedOutline = generateDetailedOutline(data.userInputPrompt || 'Your Topic')
+      setOutline(detailedOutline)
+    }
+    
     if (data.designStyle) setSelectedStyle(data.designStyle)
   }
 
@@ -89,8 +142,12 @@ function Outline() {
         outline: outline,
         updatedAt: Date.now()
       })
+
+      // ✅ Navigate to editor page after successful save
+      navigate(`/workspace/project/${projectId}/editor`)
     } catch (error) {
       console.error('Firestore error:', error)
+      alert('Failed to save. Please try again.')
     } finally {
       setUpdateDbLoading(false)
     }

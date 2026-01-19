@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
 import { getFirestore } from "firebase/firestore";
+import { getLiveGenerativeModel, ResponseModality } from "firebase/ai";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,4 +25,12 @@ export const firebaseDb = getFirestore(app);
 const ai = getAI(app, { backend: new GoogleAIBackend() });
 
 // Create a `GenerativeModel` instance with a model that supports your use case
-export const GeminiAiModel = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
+export const GeminiAiModel = getGenerativeModel(ai, { model: "gemini-2.0-flash" });
+
+// Create a LiveGenerativeModel instance (text-only)
+export const GeminiAiLiveModel = getLiveGenerativeModel(ai, {
+  model: "gemini-2.0-flash-live-001",
+  generationConfig: {
+    responseModalities: [ResponseModality.TEXT],
+  },
+}); 
