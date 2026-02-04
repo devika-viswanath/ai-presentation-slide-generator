@@ -210,7 +210,7 @@ ${oldHTML}
 `;
 
     try {
-      const result = await GeminiAiModel.generateContent(prompt);
+      const result = await GeminiAiModel.generateContent(prompt); // 🤖 GEMINI AI CALL
       const newHTML = (await result.response.text()).trim();
 
       // ✅ Replace only the selected element

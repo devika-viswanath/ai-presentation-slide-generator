@@ -19,7 +19,7 @@ Return the response only in JSON format:
   }
 ]`
 
-/* ================= GENERATE DETAILED OUTLINE (8 SLIDES) ================= */
+/* ================= GENERATE DETAILED OUTLINE  ================= */
 
 const generateDetailedOutline = (topic: string): Outline[] => {
   return [
@@ -66,7 +66,7 @@ const generateDetailedOutline = (topic: string): Outline[] => {
   ]
 }
 
-/* ================= DEFAULT DUMMY OUTLINE ================= */
+
 
 const DUMMY_OUTLINE = generateDetailedOutline('Your Topic')
 
@@ -137,7 +137,7 @@ function Outline() {
       // 🔥 remove image import before saving
       const { bannerImage, ...styleWithoutImage } = selectedStyle as any
 
-      await updateDoc(doc(firebaseDb, 'projects', projectId!), {
+      await updateDoc(doc(firebaseDb, 'projects', projectId!), { // 📤 API CALL
         designStyle: styleWithoutImage,
         outline: outline,
         updatedAt: Date.now()

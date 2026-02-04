@@ -103,7 +103,7 @@ type Props = {
 function SlidersStyle({ selectStyle, selectedStyle }: Props) {
   return (
     <div className='mt-5'>
-      <h2 className='font-bold text-xl'>Select Slider Style</h2>
+      <h2 className='font-bold text-xl text-gray-900 dark:text-white'>Select Slider Style</h2>
 
       <div className='grid grid-cols-2 md:grid-cols-3 gap-5 mt-3'>
         {Design_Styles.map((design, index) => {
@@ -113,7 +113,7 @@ function SlidersStyle({ selectStyle, selectedStyle }: Props) {
           return (
             <div
               key={index}
-              className={`cursor-pointer p-1 rounded-2xl transition-all ${
+              className={`cursor-pointer p-1 rounded-2xl transition-all bg-white dark:bg-gray-800 ${
                 isSelected ? 'border-2 border-blue-500' : 'border border-gray-300'
               }`}
               onClick={() => selectStyle(design)}
@@ -122,7 +122,7 @@ function SlidersStyle({ selectStyle, selectedStyle }: Props) {
                 src={design.bannerImage}
                 className='w-full h-[130px] object-cover rounded-xl'
               />
-              <h2 className='font-medium text-center mt-1'>{design.styleName}</h2>
+              <h2 className='font-medium text-center mt-1 text-gray-900 dark:text-white'>{design.styleName}</h2>
             </div>
           );
         })}

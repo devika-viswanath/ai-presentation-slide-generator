@@ -145,7 +145,7 @@ function Editor() {
         const GeminiSlideCall = async (prompt: string, index: number): Promise<boolean> => {
           
           try {
-            const result = await GeminiAiModel.generateContent(prompt);
+            const result = await GeminiAiModel.generateContent(prompt);  // 🤖 GEMINI AI CALL
             const text = result.response.text();
 
             const finalText = text
