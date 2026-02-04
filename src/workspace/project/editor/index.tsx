@@ -153,7 +153,7 @@ function Editor() {
               .replace(/```/g, "")
               .trim();
 
-            const slideData = { code: finalText };
+            const slideData = { code: finalText};
 
             // Update the slider in state immediately
             setSliders((prev: any[]) => {
