@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import FloatingActionTool from './FloatingActionTool'
 import { GeminiAiModel } from './../../../config/FirebaseConfig'
+import { IMAGEKIT_BASE_URL } from '../../lib/imagekit'
 
 const HTML_DEFAULT = `<!DOCTYPE html>
 <html lang="en">
@@ -198,16 +199,16 @@ function SliderFrame({slide,colors }: props) {
 
     // Build AI prompt
     const prompt = `
-Regenerate or rewrite the following HTML code based on this user instruction.
-If user asked to change the image/regenerate the image then make sure to use ImageKit:
-'https://ik.imagekit.io/ikmedia/ik-genimg-prompt-{imagePrompt}/{altImageName}.jpg'
-Replace {imagePrompt} with relevant image prompt and altImageName with a random image name.
-If user want to crop image, or remove background or scale image or optimize image then add image kit ai transformation
-by providing tr=fo-auto,<other transformation> etc.
-User instruction is : ${userAiPrompt}
-HTML code:
-${oldHTML}
-`;
+  Regenerate or rewrite the following HTML code based on this user instruction.
+  If user asked to change the image/regenerate the image then make sure to use ImageKit:
+  '${IMAGEKIT_BASE_URL}/prompt-{imagePrompt}/{altImageName}.jpg'
+  Replace {imagePrompt} with relevant image prompt and altImageName with a random image name.
+  If user want to crop image, or remove background or scale image or optimize image then add image kit ai transformation
+  by providing tr=fo-auto,<other transformation> etc.
+  User instruction is : ${userAiPrompt}
+  HTML code:
+  ${oldHTML}
+  `;
 
     try {
       const result = await GeminiAiModel.generateContent(prompt); // 🤖 GEMINI AI CALL

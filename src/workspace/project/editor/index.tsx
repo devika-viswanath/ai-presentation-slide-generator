@@ -1,5 +1,6 @@
 import OutlineSection from '@/components/custom/OutlineSection'
 import { firebaseDb, GeminiAiModel } from './../../../../config/FirebaseConfig'
+import { IMAGEKIT_BASE_URL } from '../../../lib/imagekit'
 import { useEffect, useState } from 'react'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useParams } from 'react-router-dom'
@@ -36,8 +37,7 @@ stretching or overflow.
 divide the slide so segments do not overlap.
 
 Generate Image if needed using:
-'https://ik.imagekit.io/uxpkojtoy-
-prompt-{imagePrompt}/{altImageName}.jpg'
+'${IMAGEKIT_BASE_URL}-prompt-{imagePrompt}/{altImageName}.jpg'
 Replace {imagePrompt} with relevant image
 prompt and altImageName with a random image
 name.
