@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import type { Project } from '../outline'
 
 import SliderFrame from '@/components/custom/SliderFrame'
+import { exportSlidesAsPPT, exportSlidesAsPDF } from '../../../lib/exportSlides'
 
 
 const SLIDER_PROMPT = `Generate HTML
@@ -294,6 +295,26 @@ function Editor() {
                 className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 📝 Create Slide {nextSlideIndex + 1}
+              </button>
+              <button
+                onClick={async () => {
+                  const slideHtmls = (sliders || []).map((s: any) => s.code || '');
+                  if (slideHtmls.length === 0) return;
+                  await exportSlidesAsPPT(slideHtmls, 'project-slides.pptx');
+                }}
+                className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg'
+              >
+                📦 Export PPT
+              </button>
+              <button
+                onClick={async () => {
+                  const slideHtmls = (sliders || []).map((s: any) => s.code || '');
+                  if (slideHtmls.length === 0) return;
+                  await exportSlidesAsPDF(slideHtmls, 'project-slides.pdf');
+                }}
+                className='bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg'
+              >
+                📄 Export PDF
               </button>
             </div>
           </div>
