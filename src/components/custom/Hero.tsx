@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 
 
-
+// Hero section with headline, description, and call-to-action buttons
 
 function Hero() {
 

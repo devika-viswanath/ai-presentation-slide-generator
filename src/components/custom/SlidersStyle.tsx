@@ -132,3 +132,4 @@ function SlidersStyle({ selectStyle, selectedStyle }: Props) {
 }
 
 export default SlidersStyle
+
