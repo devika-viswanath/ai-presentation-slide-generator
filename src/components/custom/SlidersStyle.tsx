@@ -130,6 +130,6 @@ function SlidersStyle({ selectStyle, selectedStyle }: Props) {
     </div>
   )
 }
-
+// export the design styles array for use in other components
 export default SlidersStyle
 
