@@ -132,4 +132,4 @@ function SlidersStyle({ selectStyle, selectedStyle }: Props) {
 }
 
 export default SlidersStyle
-
+//import React, { useEffect, useState } from 'react'
