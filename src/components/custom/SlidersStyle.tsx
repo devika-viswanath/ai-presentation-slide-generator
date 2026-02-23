@@ -132,3 +132,4 @@ function SlidersStyle({ selectStyle, selectedStyle }: Props) {
 }
 
 export default SlidersStyle
+// Note: The design guide text is truncated for brevity. You can expand it as needed.
