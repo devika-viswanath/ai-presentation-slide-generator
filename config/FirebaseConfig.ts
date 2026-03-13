@@ -22,9 +22,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Firestore Database Instance
 export const firebaseDb = getFirestore(app);
+
 // Initialize the Gemini Developer API backend service
 const ai = getAI(app, { backend: new GoogleAIBackend() });
 
+<<<<<<< HEAD
 // Create a `GenerativeModel` instance with a model that supports your use case
 export const GeminiAiModel = getGenerativeModel(ai, { model: "gemini-2.0-flash" });
 
@@ -35,3 +37,7 @@ export const GeminiAiLiveModel = getLiveGenerativeModel(ai, {
     responseModalities: [ResponseModality.TEXT],
   },
 }); 
+=======
+// Create a GenerativeModel instance - using gemini-2.0-flash
+export const GeminiAiModel = getGenerativeModel(ai, { model: "gemini-2.0-flash" }); 
+>>>>>>> 49924b5 (Add Malayalam language support for slide generation)
