@@ -1,39 +1,65 @@
-#root {
- 
+.app-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 120% at 10% 20%, rgba(168, 85, 247, 0.12), transparent 45%),
+    radial-gradient(120% 120% at 85% 10%, rgba(34, 211, 238, 0.12), transparent 45%),
+    radial-gradient(140% 140% at 50% 80%, rgba(249, 115, 22, 0.08), transparent 55%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 32%, #f8fafc 100%);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.dark .app-shell {
+  background:
+    radial-gradient(120% 120% at 10% 20%, rgba(168, 85, 247, 0.18), transparent 45%),
+    radial-gradient(120% 120% at 85% 10%, rgba(34, 211, 238, 0.18), transparent 45%),
+    radial-gradient(140% 140% at 50% 80%, rgba(249, 115, 22, 0.12), transparent 55%),
+    linear-gradient(180deg, #0f172a 0%, #0b1224 36%, #0f172a 100%);
+  color: inherit;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.gradient-spot {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.gradient-spot-1 {
+  width: 320px;
+  height: 320px;
+  top: -140px;
+  left: -90px;
+  background: #a855f7;
 }
 
-.card {
-  padding: 2em;
+.gradient-spot-2 {
+  width: 320px;
+  height: 320px;
+  top: 80px;
+  right: 40px;
+  background: #22d3ee;
 }
 
-.read-the-docs {
-  color: #888;
+.gradient-spot-3 {
+  width: 280px;
+  height: 280px;
+  bottom: -120px;
+  left: 25%;
+  background: #f97316;
+}
+
+.glass-panel {
+  position: relative;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 20px 70px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
+  padding: 28px;
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.5);
 }

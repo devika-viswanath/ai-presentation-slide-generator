@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   InputGroup,
   InputGroupAddon,
@@ -27,7 +27,7 @@ import { useNavigate } from 'react-router-dom'
 
 function PromptBox() {
   const [userInput, setUserInput] = useState<string>('');
-  const [noOfSlider,setNoOfSlider] = useState<string>('4 to 6');
+  const [noOfSlider, setNoOfSlider] = useState<string>('4-6');
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -55,50 +55,57 @@ function PromptBox() {
   }
 
   return (
-    <div className='w-full flex items-center justify-center mt-28'>
-      <div className='flex flex-col items-center justify-center space-y-4'>
-        
-        <h2 className='font-bold text-4xl'>
-          Describe your topic, we'll design the <span className='text-primary'>PPT</span> slides!
-        </h2>
+    <div className="w-full">
+      <div className="flex w-full justify-center">
+        <div className="w-full max-w-4xl space-y-4 rounded-2xl bg-white/80 p-5 shadow-xl ring-1 ring-black/5 backdrop-blur dark:bg-slate-900/70 dark:ring-white/10">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
+              Start with a clear prompt
+            </div>
+            <p className="text-xs text-muted-foreground sm:text-sm">Include audience, tone, and goal for sharper slides.</p>
+          </div>
 
-        <p className='text-xl text-gray-500'>Your design will be saved as a new project</p>
+          <InputGroup>
+            <InputGroupTextarea
+              placeholder="Describe the deck you want to create (topic, audience, tone, call-to-action)"
+              className="min-h-36 bg-transparent"
+              onChange={(event) => setUserInput(event.target.value)}
+            />
 
-        <InputGroup>
-          <InputGroupTextarea
-            placeholder='Enter what kind of slides you want to create?'
-            className='min-h-36'
-            onChange={(event) => setUserInput(event.target.value)}
-          />
+            <InputGroupAddon align={'block-end'}>
+              <Select onValueChange={(value) => setNoOfSlider(value)} value={noOfSlider}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select No of Slides" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>No. Of Slides</SelectLabel>
+                    <SelectItem value="4-6">4-6 Slides</SelectItem>
+                    <SelectItem value="6-8">6-8 Slides</SelectItem>
+                    <SelectItem value="8-12">8-12 Slides</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
 
-          <InputGroupAddon align={'block-end'}>
+              <InputGroupButton
+                variant={'default'}
+                className='ml-auto rounded-full'
+                size={'icon-sm'}
+                onClick={CreateAndSaveProject}
+                disabled={!userInput || loading}
+              >
+                {loading ? <Loader2Icon className='animate-spin' /> : <ArrowUp />}
+              </InputGroupButton>
 
-            <Select onValueChange={(value) => setNoOfSlider(value)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select No of Slides" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>No. Of Slides</SelectLabel>
-                  <SelectItem value="4-6">4-6 Slides</SelectItem>
-                  <SelectItem value="6-8">6-8 Slides</SelectItem>
-                  <SelectItem value="8-12">8-12 Slides</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            </InputGroupAddon>
+          </InputGroup>
 
-            <InputGroupButton
-              variant={'default'}
-              className='rounded-full ml-auto'
-              size={'icon-sm'}
-              onClick={CreateAndSaveProject}
-              disabled={!userInput}
-            >
-              {loading ? <Loader2Icon className='animate-spin' /> : <ArrowUp />}
-            </InputGroupButton>
-
-          </InputGroupAddon>
-        </InputGroup>
+          <div className="flex items-center justify-between text-xs text-muted-foreground sm:text-sm">
+            <span>Slides to generate: {noOfSlider.replace('-', ' to ')}</span>
+            <span>Projects save automatically to your workspace</span>
+          </div>
+        </div>
       </div>
     </div>
   )
