@@ -23,7 +23,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import { firebaseDb } from './../../../config/FirebaseConfig'
 import { useUser } from '@clerk/clerk-react'   
 import { useNavigate } from 'react-router-dom'
-
+//ut
 
 function PromptBox() {
   const [userInput, setUserInput] = useState<string>('');
